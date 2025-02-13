@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kashari/heimdall/v2/router"
+	"github.com/kashari/heimdall/router"
 	"github.com/stretchr/testify/assert"
 )
 

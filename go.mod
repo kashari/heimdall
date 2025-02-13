@@ -1,4 +1,4 @@
-module github.com/kashari/heimdall/v2
+module github.com/kashari/heimdall
 
 go 1.23.6
 
