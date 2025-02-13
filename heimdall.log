@@ -1,0 +1,206 @@
+2025-02-13T12:39:28.148+0100	[34mINFO[0m	router/router.go:356	Server Configuration	{"port": "8080"}
+2025-02-13T12:39:28.148+0100	[34mINFO[0m	router/router.go:358	Registered Routes:
+2025-02-13T12:39:28.148+0100	[34mINFO[0m	router/router.go:360	Route	{"definition": "GET /ping"}
+2025-02-13T12:39:28.148+0100	[34mINFO[0m	router/router.go:360	Route	{"definition": "GET /how-many-seconds-for-this-request/:nanos"}
+2025-02-13T12:39:28.148+0100	[34mINFO[0m	router/router.go:364	Rate Limiter Configuration	{"maxTokens": 100, "refillInterval": "1ns"}
+2025-02-13T12:39:28.148+0100	[34mINFO[0m	router/router.go:373	Worker Pool Configuration	{"size": 20}
+2025-02-13T12:39:28.148+0100	[34mINFO[0m	router/router.go:378	Middlewares Configured	{"count": 0}
+2025-02-13T12:39:28.148+0100	[34mINFO[0m	router/router.go:327	Starting server	{"port": "8080"}
+2025-02-13T12:39:59.441+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000"}
+2025-02-13T12:39:59.441+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "387.549µs"}
+2025-02-13T12:40:03.707+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:03.707+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "236.168µs"}
+2025-02-13T12:40:04.848+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:04.848+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "144.362µs"}
+2025-02-13T12:40:07.083+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:07.083+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "211.249µs"}
+2025-02-13T12:40:08.107+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:08.107+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "145.184µs"}
+2025-02-13T12:40:09.569+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:09.569+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "144.694µs"}
+2025-02-13T12:40:09.716+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:09.716+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "331.991µs"}
+2025-02-13T12:40:09.857+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:09.857+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "121.357µs"}
+2025-02-13T12:40:10.017+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:10.017+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "111.128µs"}
+2025-02-13T12:40:10.177+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:10.177+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "149.613µs"}
+2025-02-13T12:40:10.318+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:10.318+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "219.657µs"}
+2025-02-13T12:40:10.481+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:10.481+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "141.734µs"}
+2025-02-13T12:40:10.641+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:10.641+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "132.284µs"}
+2025-02-13T12:40:10.813+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:10.813+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "204.755µs"}
+2025-02-13T12:40:10.978+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:10.978+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "163.762µs"}
+2025-02-13T12:40:11.130+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:11.130+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "117.308µs"}
+2025-02-13T12:40:11.281+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:11.281+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "103.958µs"}
+2025-02-13T12:40:11.442+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:11.442+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "131.755µs"}
+2025-02-13T12:40:11.594+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:11.594+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "130.846µs"}
+2025-02-13T12:40:11.754+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:11.754+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "98.608µs"}
+2025-02-13T12:40:11.914+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:11.915+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "147.41µs"}
+2025-02-13T12:40:12.069+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:12.069+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "137.294µs"}
+2025-02-13T12:40:12.554+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:12.554+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "119.085µs"}
+2025-02-13T12:40:14.571+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:14.571+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "122.11µs"}
+2025-02-13T12:40:14.746+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:14.746+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "109.985µs"}
+2025-02-13T12:40:14.930+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:14.930+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "93.237µs"}
+2025-02-13T12:40:15.123+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:15.123+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "118.814µs"}
+2025-02-13T12:40:15.538+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:15.538+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "174.922µs"}
+2025-02-13T12:40:15.714+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:15.714+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "90.313µs"}
+2025-02-13T12:40:19.312+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:40:19.312+0100	[34mINFO[0m	router/router.go:291	Served dynamic route	{"duration": "145.185µs"}
+2025-02-13T12:40:25.905+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:25.905+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "157.672µs"}
+2025-02-13T12:40:28.752+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:28.752+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "98.669µs"}
+2025-02-13T12:40:29.240+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:29.240+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "109.969µs"}
+2025-02-13T12:40:29.405+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:29.405+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "227.583µs"}
+2025-02-13T12:40:29.568+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:29.568+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "177.204µs"}
+2025-02-13T12:40:29.752+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:29.752+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "136.192µs"}
+2025-02-13T12:40:29.955+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:29.955+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "137.48µs"}
+2025-02-13T12:40:30.256+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:30.256+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "127.455µs"}
+2025-02-13T12:40:30.424+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:30.425+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "154.673µs"}
+2025-02-13T12:40:30.568+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:30.568+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "123.209µs"}
+2025-02-13T12:40:30.912+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:30.912+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "125.75µs"}
+2025-02-13T12:40:31.096+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:31.097+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "119.654µs"}
+2025-02-13T12:40:31.248+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:31.248+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "111.814µs"}
+2025-02-13T12:40:31.520+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:31.520+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "116.472µs"}
+2025-02-13T12:40:31.696+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:31.696+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "110.755µs"}
+2025-02-13T12:40:31.857+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:31.857+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "152.006µs"}
+2025-02-13T12:40:32.137+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:32.137+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "144.797µs"}
+2025-02-13T12:40:32.295+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:32.296+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "115.558µs"}
+2025-02-13T12:40:32.464+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:32.464+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "100.339µs"}
+2025-02-13T12:40:32.651+0100	[34mINFO[0m	router/router.go:270	Incoming request	{"method": "GET", "url": "/ping"}
+2025-02-13T12:40:32.651+0100	[34mINFO[0m	router/router.go:277	Served static route	{"duration": "153.167µs"}
+2025-02-13T12:44:44.730+0100	[34mINFO[0m	router/router.go:357	Server Configuration	{"port": "8080"}
+2025-02-13T12:44:44.730+0100	[34mINFO[0m	router/router.go:359	Registered Routes:
+2025-02-13T12:44:44.730+0100	[34mINFO[0m	router/router.go:361	Route	{"definition": "GET /ping"}
+2025-02-13T12:44:44.731+0100	[34mINFO[0m	router/router.go:361	Route	{"definition": "GET /how-many-seconds-for-this-request/:nanos"}
+2025-02-13T12:44:44.731+0100	[34mINFO[0m	router/router.go:365	Rate Limiter Configuration	{"maxTokens": 100, "refillInterval": "1ns"}
+2025-02-13T12:44:44.731+0100	[34mINFO[0m	router/router.go:374	Worker Pool Configuration	{"size": 20}
+2025-02-13T12:44:44.731+0100	[34mINFO[0m	router/router.go:379	Middlewares Configured	{"count": 0}
+2025-02-13T12:44:44.731+0100	[34mINFO[0m	router/router.go:328	Starting server	{"port": "8080"}
+2025-02-13T12:45:01.687+0100	[34mINFO[0m	router/router.go:271	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:45:01.687+0100	[34mINFO[0m	router/router.go:545	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:45:01.687+0100	[34mINFO[0m	router/router.go:292	Served dynamic route	{"duration": "270.909µs"}
+2025-02-13T12:45:03.790+0100	[34mINFO[0m	router/router.go:271	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:45:03.791+0100	[34mINFO[0m	router/router.go:545	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:45:03.791+0100	[34mINFO[0m	router/router.go:292	Served dynamic route	{"duration": "162.457µs"}
+2025-02-13T12:45:04.198+0100	[34mINFO[0m	router/router.go:271	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:45:04.199+0100	[34mINFO[0m	router/router.go:545	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:45:04.199+0100	[34mINFO[0m	router/router.go:292	Served dynamic route	{"duration": "228.79µs"}
+2025-02-13T12:45:06.016+0100	[34mINFO[0m	router/router.go:271	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:45:06.016+0100	[34mINFO[0m	router/router.go:545	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:45:06.016+0100	[34mINFO[0m	router/router.go:292	Served dynamic route	{"duration": "202.969µs"}
+2025-02-13T12:45:07.833+0100	[34mINFO[0m	router/router.go:271	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:45:07.834+0100	[34mINFO[0m	router/router.go:545	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:45:07.834+0100	[34mINFO[0m	router/router.go:292	Served dynamic route	{"duration": "275.936µs"}
+2025-02-13T12:45:08.223+0100	[34mINFO[0m	router/router.go:271	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:45:08.223+0100	[34mINFO[0m	router/router.go:545	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:45:08.223+0100	[34mINFO[0m	router/router.go:292	Served dynamic route	{"duration": "245.645µs"}
+2025-02-13T12:45:08.487+0100	[34mINFO[0m	router/router.go:271	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:45:08.488+0100	[34mINFO[0m	router/router.go:545	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:45:08.488+0100	[34mINFO[0m	router/router.go:292	Served dynamic route	{"duration": "210.63µs"}
+2025-02-13T12:45:08.751+0100	[34mINFO[0m	router/router.go:271	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:45:08.751+0100	[34mINFO[0m	router/router.go:545	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:45:08.751+0100	[34mINFO[0m	router/router.go:292	Served dynamic route	{"duration": "201.219µs"}
+2025-02-13T12:45:09.039+0100	[34mINFO[0m	router/router.go:271	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:45:09.040+0100	[34mINFO[0m	router/router.go:545	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:45:09.040+0100	[34mINFO[0m	router/router.go:292	Served dynamic route	{"duration": "206.981µs"}
+2025-02-13T12:45:09.504+0100	[34mINFO[0m	router/router.go:271	Incoming request	{"method": "GET", "url": "/how-many-seconds-for-this-request/100000000000000"}
+2025-02-13T12:45:09.504+0100	[34mINFO[0m	router/router.go:545	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:45:09.504+0100	[34mINFO[0m	router/router.go:292	Served dynamic route	{"duration": "247.541µs"}
+2025-02-13T12:49:06.295+0100	[34mINFO[0m	router/router.go:354	Server Configuration	{"port": "8080"}
+2025-02-13T12:49:06.296+0100	[34mINFO[0m	router/router.go:356	Registered Routes:
+2025-02-13T12:49:06.296+0100	[34mINFO[0m	router/router.go:358	Route	{"definition": "GET /ping"}
+2025-02-13T12:49:06.296+0100	[34mINFO[0m	router/router.go:358	Route	{"definition": "GET /how-many-seconds-for-this-request/:nanos"}
+2025-02-13T12:49:06.296+0100	[34mINFO[0m	router/router.go:362	Rate Limiter Configuration	{"maxTokens": 100, "refillInterval": "1ns"}
+2025-02-13T12:49:06.296+0100	[34mINFO[0m	router/router.go:371	Worker Pool Configuration	{"size": 20}
+2025-02-13T12:49:06.296+0100	[34mINFO[0m	router/router.go:376	Middlewares Configured	{"count": 0}
+2025-02-13T12:49:06.296+0100	[34mINFO[0m	router/router.go:325	Starting server	{"port": "8080"}
+2025-02-13T12:49:28.730+0100	[34mINFO[0m	router/router.go:542	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:49:28.731+0100	[34mINFO[0m	router/router.go:542	(DYNAMIC ROUTE) Request: GET /how-many-seconds-for-this-request/100000000000000, from: [::1]:49941 completed in 991.916µs
+2025-02-13T12:49:34.565+0100	[34mINFO[0m	router/router.go:542	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:49:34.565+0100	[34mINFO[0m	router/router.go:542	(DYNAMIC ROUTE) Request: GET /how-many-seconds-for-this-request/100000000000000, from: [::1]:49941 completed in 148.579µs
+2025-02-13T12:49:34.981+0100	[34mINFO[0m	router/router.go:542	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:49:34.981+0100	[34mINFO[0m	router/router.go:542	(DYNAMIC ROUTE) Request: GET /how-many-seconds-for-this-request/100000000000000, from: [::1]:49941 completed in 146.071µs
+2025-02-13T12:49:35.686+0100	[34mINFO[0m	router/router.go:542	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:49:35.686+0100	[34mINFO[0m	router/router.go:542	(DYNAMIC ROUTE) Request: GET /how-many-seconds-for-this-request/100000000000000, from: [::1]:49941 completed in 251.429µs
+2025-02-13T12:49:36.118+0100	[34mINFO[0m	router/router.go:542	---------- Request took 100000000000000.000000 nanoseconds
+2025-02-13T12:49:36.118+0100	[34mINFO[0m	router/router.go:542	(DYNAMIC ROUTE) Request: GET /how-many-seconds-for-this-request/100000000000000, from: [::1]:49941 completed in 222.735µs
+2025-02-13T12:51:12.550+0100	[34mINFO[0m	router/router.go:355	Server Configuration	{"port": "8080"}
+2025-02-13T12:51:12.550+0100	[34mINFO[0m	router/router.go:357	Registered Routes:
+2025-02-13T12:51:12.551+0100	[34mINFO[0m	router/router.go:359	Route	{"definition": "GET /ping"}
+2025-02-13T12:51:12.551+0100	[34mINFO[0m	router/router.go:359	Route	{"definition": "GET /how-many-seconds-for-this-request/:nanos"}
+2025-02-13T12:51:12.551+0100	[34mINFO[0m	router/router.go:363	Rate Limiter Configuration	{"maxTokens": 100, "refillInterval": "1ns"}
+2025-02-13T12:51:12.551+0100	[34mINFO[0m	router/router.go:372	Worker Pool Configuration	{"size": 20}
+2025-02-13T12:51:12.551+0100	[34mINFO[0m	router/router.go:377	Middlewares Configured	{"count": 0}
+2025-02-13T12:51:12.551+0100	[34mINFO[0m	router/router.go:326	Starting server	{"port": "8080"}
+2025/02/13 13:03:14 Server Configuration PORT: 8080
+2025/02/13 13:03:14 Registered Routes:
+2025/02/13 13:03:14 Route GET /ping
+2025/02/13 13:03:14 Route GET /how-many-seconds-for-this-request/:nanos
+2025/02/13 13:03:14 Rate Limiter Configuration MAX_TOKENS: 100 REFILL_INTERVAL: 1ns
+2025/02/13 13:03:14 Worker Pool Configuration SIZE: 20
+2025/02/13 13:03:14 Middlewares Configured	
+2025/02/13 13:03:14 Starting server in port 8080
+2025/02/13 13:04:30 -------------------------- Registered Routes ---------------------------
+2025/02/13 13:04:30 Route GET /ping
+2025/02/13 13:04:30 Route GET /how-many-seconds-for-this-request/:nanos
+2025/02/13 13:04:30 Rate Limiter Configuration MAX_TOKENS: 100 REFILL_INTERVAL: 1ns
+2025/02/13 13:04:30 Worker Pool Configuration SIZE: 20
+2025/02/13 13:04:30 Middlewares Configured	
+2025/02/13 13:04:30 Starting server in port 8080
+2025/02/13 13:05:18 -------------------------- Registered Routes ---------------------------
+2025/02/13 13:05:18 --
+2025/02/13 13:05:18 Route GET /ping
+2025/02/13 13:05:18 Route GET /how-many-seconds-for-this-request/:nanos
+2025/02/13 13:05:18 --
+2025/02/13 13:05:18 -------------------------- Registered Routes ---------------------------
+2025/02/13 13:05:18 Rate Limiter Configuration MAX_TOKENS: 100 REFILL_INTERVAL: 1ns
+2025/02/13 13:05:18 Worker Pool Configuration SIZE: 20
+2025/02/13 13:05:18 Middlewares Configured	
+2025/02/13 13:05:18 Starting server in port 8080
+2025/02/13 13:07:45 -------------------------- Registered Routes ---------------------------
+2025/02/13 13:07:45 --
+2025/02/13 13:07:45 Route GET /ping
+2025/02/13 13:07:45 Route GET /how-many-seconds-for-this-request/:nanos
+2025/02/13 13:07:45 --
+2025/02/13 13:07:45 -------------------------- Registered Routes ---------------------------
+2025/02/13 13:07:45 Rate Limiter Configuration MAX_TOKENS: 100 REFILL_INTERVAL: 1ns
+2025/02/13 13:07:45 Worker Pool Configuration SIZE: 20
+2025/02/13 13:07:45 Starting server in port 8080

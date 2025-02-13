@@ -3,28 +3,34 @@ package router
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"os"
+	"reflect"
+	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/armon/go-radix"
-	"go.uber.org/zap"
 )
 
 // Middleware is a function that wraps an HTTP handler.
 type Middleware func(http.HandlerFunc) http.HandlerFunc
 
-// ctxKey is an unexported type for context keys within this package.
+// ctxKey is an unexported type for context keys.
 type ctxKey string
 
+// Context wraps the http response and request, and provides utility methods.
 type Context struct {
 	Writer  http.ResponseWriter
 	Request *http.Request
 }
 
-// Param retrieves path variables stored in the request's context.
+// Param retrieves a path parameter from the request context.
 func (c *Context) Param(key string) string {
 	if params, ok := c.Request.Context().Value(ctxKey("params")).(map[string]string); ok {
 		return params[key]
@@ -32,36 +38,56 @@ func (c *Context) Param(key string) string {
 	return ""
 }
 
-// Query returns all query parameters.
-func (c *Context) Query() map[string]interface{} {
-	json := make(map[string]interface{})
-
-	for key, vals := range c.Request.URL.Query() {
-		if len(vals) > 0 {
-			json[key] = vals[0]
-		}
-	}
-
-	return json
+// ParamInt converts the parameter value to an int.
+func (c *Context) ParamInt(key string) (int, error) {
+	return strconv.Atoi(c.Param(key))
 }
 
+// ParamInt64 converts the parameter value to an int64.
+func (c *Context) ParamInt64(key string) (int64, error) {
+	return strconv.ParseInt(c.Param(key), 10, 64)
+}
+
+// ParamFloat64 converts the parameter value to a float64.
+func (c *Context) ParamFloat64(key string) (float64, error) {
+	return strconv.ParseFloat(c.Param(key), 64)
+}
+
+// ParamBool converts the parameter value to a bool.
+func (c *Context) ParamBool(key string) (bool, error) {
+	return strconv.ParseBool(c.Param(key))
+}
+
+// Query returns all query parameters.
+func (c *Context) Query() map[string]interface{} {
+	q := make(map[string]interface{})
+	for key, vals := range c.Request.URL.Query() {
+		if len(vals) > 0 {
+			q[key] = vals[0]
+		}
+	}
+	return q
+}
+
+// Body returns the request body as bytes.
 func (c *Context) Body() []byte {
 	body, _ := io.ReadAll(c.Request.Body)
 	return body
 }
 
+// JsonBody decodes the request body into a map.
 func (c *Context) JsonBody() map[string]interface{} {
-	jsonBody := make(map[string]interface{})
-	json.NewDecoder(c.Request.Body).Decode(&jsonBody)
-	return jsonBody
+	var body map[string]interface{}
+	json.NewDecoder(c.Request.Body).Decode(&body)
+	return body
 }
 
-// QueryParam returns a specific query parameter by key.
+// QueryParam returns a single query parameter.
 func (c *Context) QueryParam(key string) string {
 	return c.Request.URL.Query().Get(key)
 }
 
-// BindJSON decodes the request body JSON into a provided struct.
+// BindJSON binds the request JSON to a given struct.
 func (c *Context) BindJSON(v interface{}) error {
 	return json.NewDecoder(c.Request.Body).Decode(v)
 }
@@ -73,13 +99,14 @@ func (c *Context) JSON(status int, data interface{}) {
 	json.NewEncoder(c.Writer).Encode(data)
 }
 
+// String sends a plain text response.
 func (c *Context) String(status int, data string) {
 	c.Writer.Header().Set("Content-Type", "text/plain")
 	c.Writer.WriteHeader(status)
 	c.Writer.Write([]byte(data))
 }
 
-// paramsKey is the key under which URL parameters are stored in the request context.
+// paramsKey is the key under which URL parameters are stored.
 const paramsKey ctxKey = "params"
 
 // route represents a registered route.
@@ -89,28 +116,25 @@ type route struct {
 	handler http.HandlerFunc
 }
 
-// Router is our high-performance HTTP router.
+// Router is our HTTP router with integrated logging.
 type Router struct {
 	staticRoutes  *radix.Tree  // static routes stored by exact path
 	dynamicRoutes []route      // routes with parameters (e.g., ":id")
 	middlewares   []Middleware // middleware chain
-	logger        *zap.Logger  // high-performance logger
-	workerPool    *WorkerPool  // optional concurrent worker pool for handling requests
+	workerPool    *WorkerPool  // optional worker pool for concurrent handling
 	rateLimiter   *RateLimiter // optional rate limiter on the critical path
 }
 
-// NewRouter initializes and returns a new Router.
+// GjallarHorn initializes and returns a new Router with the integrated logger.
+// It also prints the HEIMDALL logo and initial startup information.
 func GjallarHorn() *Router {
-	logger, err := zap.NewProduction()
-	if err != nil {
-		panic(err)
-	}
-	return &Router{
+	r := &Router{
 		staticRoutes:  radix.New(),
 		dynamicRoutes: make([]route, 0),
 		middlewares:   []Middleware{},
-		logger:        logger,
 	}
+	r.printStartupInfo()
+	return r
 }
 
 // Use adds a middleware to the chain.
@@ -119,7 +143,7 @@ func (r *Router) Use(m Middleware) *Router {
 	return r
 }
 
-// WithWorkerPool configures the router to use a worker pool with the specified number of workers.
+// WithWorkerPool configures the router to use a worker pool.
 func (r *Router) WithWorkerPool(poolSize int) *Router {
 	r.workerPool = NewWorkerPool(poolSize)
 	return r
@@ -131,8 +155,23 @@ func (r *Router) WithRateLimiter(maxTokens int, refillInterval time.Duration) *R
 	return r
 }
 
-// Handle registers a new route with the given HTTP method, pattern, and handler.
-// Static routes (without parameters) are stored in the radix tree for fast lookup.
+// WithFileLogging configures the router to log to the specified file in addition to the console.
+// If the file cannot be opened, it logs an error and leaves the existing logger intact.
+func (r *Router) WithFileLogging(filePath string) *Router {
+	f, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		r.Error("Failed to open log file")
+		return r
+	}
+
+	tee := io.MultiWriter(os.Stdout, f)
+
+	//append the console text to the file using no zap
+	log.SetOutput(tee)
+	return r
+}
+
+// Handle registers a new route.
 func (r *Router) Handle(method, pattern string, handler http.HandlerFunc) *Router {
 	rt := route{
 		method:  method,
@@ -147,101 +186,95 @@ func (r *Router) Handle(method, pattern string, handler http.HandlerFunc) *Route
 	return r
 }
 
-func (h *Router) HandleFunc(method, pattern string, handler func(*Context)) *Router {
-	// h.Handle(method, pattern, func(w http.ResponseWriter, r *http.Request) {
-	// 	ctx := &Context{Writer: w, Request: r}
-	// 	handler(ctx)
-	// })
+// HandleFunc registers a route using a Context-based handler.
+func (r *Router) HandleFunc(method, pattern string, handler func(*Context)) *Router {
 	rt := route{
 		method:  method,
 		pattern: pattern,
-		handler: func(w http.ResponseWriter, r *http.Request) {
-			ctx := &Context{Writer: w, Request: r}
+		handler: func(w http.ResponseWriter, req *http.Request) {
+			ctx := &Context{Writer: w, Request: req}
 			handler(ctx)
 		},
 	}
-
 	if !strings.ContainsAny(pattern, ":*") {
-		h.staticRoutes.Insert(pattern, rt)
+		r.staticRoutes.Insert(pattern, rt)
 	} else {
-		h.dynamicRoutes = append(h.dynamicRoutes, rt)
+		r.dynamicRoutes = append(r.dynamicRoutes, rt)
 	}
-
-	return h
+	return r
 }
 
-func (h *Router) GET(pattern string, handler func(*Context)) *Router {
-	return h.HandleFunc("GET", pattern, handler)
+func (r *Router) GET(pattern string, handler func(*Context)) *Router {
+	return r.HandleFunc("GET", pattern, handler)
 }
 
-// POST registers a route for HTTP POST requests.
 func (r *Router) POST(pattern string, handler func(*Context)) *Router {
 	return r.HandleFunc(http.MethodPost, pattern, handler)
 }
 
-// PUT registers a route for HTTP PUT requests.
 func (r *Router) PUT(pattern string, handler func(*Context)) *Router {
 	return r.HandleFunc(http.MethodPut, pattern, handler)
 }
 
-// DELETE registers a route for HTTP DELETE requests.
 func (r *Router) DELETE(pattern string, handler func(*Context)) *Router {
 	return r.HandleFunc(http.MethodDelete, pattern, handler)
 }
 
-// ServeHTTP implements http.Handler. It matches incoming requests to registered routes,
-// applies middleware, rate limiting, and optional worker pooling.
+// ListRoutes returns a slice of strings describing all registered routes.
+func (r *Router) ListRoutes() []string {
+	var routes []string
+	r.staticRoutes.Walk(func(path string, v interface{}) bool {
+		rt := v.(route)
+		routes = append(routes, rt.method+" "+rt.pattern)
+		return false
+	})
+	for _, rt := range r.dynamicRoutes {
+		routes = append(routes, rt.method+" "+rt.pattern)
+	}
+	return routes
+}
+
+// ServeHTTP implements http.Handler.
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	start := time.Now()
-	r.logger.Info("Incoming request",
-		zap.String("method", req.Method),
-		zap.String("url", req.URL.Path))
 
-	// Attempt static (exact) route lookup.
 	if val, found := r.staticRoutes.Get(req.URL.Path); found {
 		rt := val.(route)
 		if rt.method == req.Method {
 			r.executeHandler(w, req, rt.handler)
-			r.logger.Info("Served static route", zap.Duration("duration", time.Since(start)))
+			r.Infof("(STATIC ROUTE) Request: %s %s, from: %s completed in %s", req.Method, req.URL.Path, req.RemoteAddr, time.Since(start))
 			return
 		}
 		w.Header().Set("Allow", rt.method)
 		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-		r.logger.Info("Method not allowed (static)", zap.Duration("duration", time.Since(start)))
+		r.Warnf("Method not allowed (static) %s", time.Since(start).String())
 		return
 	}
 
-	// Fallback: iterate over dynamic routes.
 	for _, rt := range r.dynamicRoutes {
 		if params, ok := matchPattern(rt.pattern, req.URL.Path); ok && rt.method == req.Method {
 			ctx := context.WithValue(req.Context(), paramsKey, params)
 			r.executeHandler(w, req.WithContext(ctx), rt.handler)
-			r.logger.Info("Served dynamic route", zap.Duration("duration", time.Since(start)))
+			r.Infof("(DYNAMIC ROUTE) Request: %s %s, from: %s completed in %s", req.Method, req.URL.Path, req.RemoteAddr, time.Since(start))
 			return
 		}
 	}
 
 	http.NotFound(w, req)
-	r.logger.Info("Route not found", zap.Duration("duration", time.Since(start)))
+	r.Warnf("Route not found %s", time.Since(start).String())
 }
 
-// executeHandler builds the middleware chain, applies rate limiting,
-// and dispatches the request either directly or via the worker pool.
-// If a worker pool is used, it waits for the handler to finish before returning.
 func (r *Router) executeHandler(w http.ResponseWriter, req *http.Request, handler http.HandlerFunc) {
-	// Build the final handler by wrapping with middleware.
 	finalHandler := handler
 	for i := len(r.middlewares) - 1; i >= 0; i-- {
 		finalHandler = r.middlewares[i](finalHandler)
 	}
 
-	// Check rate limiting.
 	if r.rateLimiter != nil && !r.rateLimiter.Allow() {
 		http.Error(w, "429 Too Many Requests", http.StatusTooManyRequests)
 		return
 	}
 
-	// If using the worker pool, wait for the handler to complete before returning.
 	if r.workerPool != nil {
 		var done sync.WaitGroup
 		done.Add(1)
@@ -255,8 +288,10 @@ func (r *Router) executeHandler(w http.ResponseWriter, req *http.Request, handle
 	}
 }
 
-// Start launches the HTTP server on the specified port with defined timeouts.
+// Start launches the HTTP server on the specified port after printing full configuration.
 func (r *Router) Start(port string) error {
+	r.printConfiguration()
+	r.Infof("Starting server in port %s", port)
 	server := &http.Server{
 		Addr:         ":" + port,
 		Handler:      r,
@@ -264,12 +299,62 @@ func (r *Router) Start(port string) error {
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
-	r.logger.Info("Starting server on port " + port)
 	return server.ListenAndServe()
 }
 
-// matchPattern compares a route pattern (e.g., "/user/:id") with a request path.
-// It extracts parameters and returns them if the path matches the pattern.
+// printStartupInfo prints the HEIMDALL logo at router initialization.
+func (r *Router) printStartupInfo() {
+	// A large, well-formatted HEIMDALL logo.
+	logo := `
+	.__           .__             .___      .__  .__   
+	|  |__   ____ |__| _____    __| _/____  |  | |  |  
+	|  |  \_/ __ \|  |/     \  / __ |\__  \ |  | |  |  
+	|   Y  \  ___/|  |  Y Y  \/ /_/ | / __ \|  |_|  |__
+	|___|  /\___  >__|__|_|  /\____ |(____  /____/____/
+		 \/     \/         \/      \/     \/           	
+
+             𝑯𝑬𝑰𝑴𝑫𝑨𝑳𝑳 -> HIGH PERFORMANCE HTTP ROUTER
+    `
+	log.Printf("%s\n", logo)
+}
+
+// printConfiguration logs all startup configuration details.
+func (r *Router) printConfiguration() {
+	// Log registered routes.
+	r.Info("-------------------------- Registered Routes ---------------------------")
+	r.Info("--")
+	for _, rt := range r.ListRoutes() {
+		r.Info("Route " + rt)
+	}
+	r.Info("--")
+	r.Info("-------------------------- Registered Routes ---------------------------")
+
+	// Rate limiter configuration.
+	if r.rateLimiter != nil {
+		r.Infof("Rate Limiter Configuration MAX_TOKENS: %d REFILL_INTERVAL: %s", r.rateLimiter.maxTokens, r.rateLimiter.refillInterval)
+	} else {
+		r.Info("Rate Limiter not configured")
+	}
+	// Worker pool configuration.
+	if r.workerPool != nil {
+		r.Infof("Worker Pool Configuration SIZE: %d", r.workerPool.size)
+	} else {
+		r.Infof("Worker Pool not configured")
+	}
+
+	if len(r.middlewares) > 0 {
+		r.Info("-------------------------- Middleware Chain ---------------------------")
+		r.Info("--")
+		for i, mw := range r.middlewares {
+			r.Infof("Middleware %d: %s", i, getFunctionName(mw))
+		}
+		r.Info("--")
+		r.Info("-------------------------- Middleware Chain ---------------------------")
+	}
+
+}
+
+// matchPattern compares a route pattern with a request path.
 func matchPattern(pattern, path string) (map[string]string, bool) {
 	patternParts := splitPath(pattern)
 	pathParts := splitPath(path)
@@ -279,7 +364,6 @@ func matchPattern(pattern, path string) (map[string]string, bool) {
 	params := make(map[string]string)
 	for i, part := range patternParts {
 		if len(part) > 0 && part[0] == ':' {
-			// Dynamic segment: capture parameter.
 			key := part[1:]
 			params[key] = pathParts[i]
 		} else if part != pathParts[i] {
@@ -289,21 +373,28 @@ func matchPattern(pattern, path string) (map[string]string, bool) {
 	return params, true
 }
 
-// splitPath splits a URL path into segments, ignoring empty segments.
+// splitPath splits a URL path into non-empty segments.
 func splitPath(path string) []string {
 	return strings.FieldsFunc(path, func(r rune) bool { return r == '/' })
 }
 
-// WorkerPool manages a pool of worker goroutines to execute tasks concurrently.
+// getFunctionName returns the name of a function (used for middleware identification).
+func getFunctionName(i interface{}) string {
+	return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
+}
+
+// WorkerPool manages a pool of goroutines.
 type WorkerPool struct {
 	tasks chan func()
 	wg    sync.WaitGroup
+	size  int
 }
 
-// NewWorkerPool creates a new WorkerPool with the specified number of workers.
+// NewWorkerPool creates a new worker pool with the given size.
 func NewWorkerPool(size int) *WorkerPool {
 	wp := &WorkerPool{
 		tasks: make(chan func(), size),
+		size:  size,
 	}
 	for i := 0; i < size; i++ {
 		go wp.worker()
@@ -311,7 +402,6 @@ func NewWorkerPool(size int) *WorkerPool {
 	return wp
 }
 
-// worker is the function run by each worker goroutine.
 func (wp *WorkerPool) worker() {
 	for task := range wp.tasks {
 		task()
@@ -319,20 +409,17 @@ func (wp *WorkerPool) worker() {
 	}
 }
 
-// Submit enqueues a task to be executed by the worker pool.
 func (wp *WorkerPool) Submit(task func()) {
 	wp.wg.Add(1)
 	wp.tasks <- task
 }
 
-// Shutdown gracefully shuts down the worker pool by waiting for all tasks to complete
-// and then closing the task channel.
 func (wp *WorkerPool) Shutdown() {
 	wp.wg.Wait()
 	close(wp.tasks)
 }
 
-// RateLimiter implements a simple token bucket rate limiter.
+// RateLimiter implements a token bucket rate limiter.
 type RateLimiter struct {
 	tokens         int
 	maxTokens      int
@@ -341,7 +428,7 @@ type RateLimiter struct {
 	quit           chan struct{}
 }
 
-// NewRateLimiter creates a new RateLimiter with the specified maximum tokens and refill interval.
+// NewRateLimiter creates a new rate limiter.
 func NewRateLimiter(maxTokens int, refillInterval time.Duration) *RateLimiter {
 	rl := &RateLimiter{
 		tokens:         maxTokens,
@@ -353,7 +440,6 @@ func NewRateLimiter(maxTokens int, refillInterval time.Duration) *RateLimiter {
 	return rl
 }
 
-// refillTokens periodically refills tokens up to the maximum allowed.
 func (rl *RateLimiter) refillTokens() {
 	ticker := time.NewTicker(rl.refillInterval)
 	defer ticker.Stop()
@@ -371,8 +457,6 @@ func (rl *RateLimiter) refillTokens() {
 	}
 }
 
-// Allow checks if a request is allowed under the current rate limit.
-// It returns true and decrements a token if available.
 func (rl *RateLimiter) Allow() bool {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
@@ -383,7 +467,53 @@ func (rl *RateLimiter) Allow() bool {
 	return false
 }
 
-// Stop stops the token refill goroutine.
 func (rl *RateLimiter) Stop() {
 	close(rl.quit)
+}
+
+func (r *Router) log(level string, message string) {
+	switch level {
+	case "info":
+		log.Println(message)
+	case "warn":
+		log.Println(message)
+	case "error":
+		log.Println(message)
+	case "debug":
+		log.Println(message)
+	default:
+		log.Println(message)
+	}
+}
+
+func (r *Router) Info(message string) {
+	r.log("info", message)
+}
+
+func (r *Router) Warn(message string) {
+	r.log("warn", message)
+}
+
+func (r *Router) Error(message string) {
+	r.log("error", message)
+}
+
+func (r *Router) Debug(message string) {
+	r.log("debug", message)
+}
+
+func (r *Router) Infof(format string, args ...interface{}) {
+	r.Info(fmt.Sprintf(format, args...))
+}
+
+func (r *Router) Warnf(format string, args ...interface{}) {
+	r.Warn(fmt.Sprintf(format, args...))
+}
+
+func (r *Router) Errorf(format string, args ...interface{}) {
+	r.Error(fmt.Sprintf(format, args...))
+}
+
+func (r *Router) Debugf(format string, args ...interface{}) {
+	r.Debug(fmt.Sprintf(format, args...))
 }
